@@ -1,8 +1,8 @@
 <?php
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/sprypay.php');
-include(dirname(__FILE__).'/sprypaylib/SprypayNotificationValidator.php');
+include(dirname(__FILE__) . '/../../init.php');
+include(dirname(__FILE__) . '/sprypay.php');
+include(dirname(__FILE__) . '/sprypaylib/SprypayNotificationValidator.php');
 
 $sprypay = new Sprypay();
 $validator = new SprypayNotificationValidator();
@@ -45,8 +45,8 @@ $message = 'Sprypay payment '.$notificationData['spPaymentId'].' ('.$notificatio
 
 //$sprypay->validateOrder(intval($id_order), $orderState, $amountPaid, $sprypay->displayName, $message,NULL, NULL, false, $secure_key);
 
-$history = new OrderHistory();// Объект История заказов
-$history->id_order = (int)$id_order;//Получение данных о заказе через id заказа
+$history = new OrderHistory();// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+$history->id_order = (int)$id_order;//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ id пїЅпїЅпїЅпїЅпїЅпїЅ
 $history->changeIdOrderState((int)$orderState, (int)$history->id_order);
 $history->addWithemail(true);
 die($validator->confirmNotification());

@@ -36,6 +36,7 @@ class Sprypay extends PaymentModule
 
 		Configuration::updateValue('SPRYPAY_SHOP_ID', '');
 		Configuration::updateValue('SPRYPAY_SHOP_SECRET', '');
+        Configuration::updateValue('SPRYPAY_SCRIPT_STATUS', 'before');
 
 		return true;
 	}
@@ -44,15 +45,18 @@ class Sprypay extends PaymentModule
 	{
 		Configuration::deleteByName('SPRYPAY_SHOP_ID');
 		Configuration::deleteByName('SPRYPAY_SHOP_SECRET');
+        Configuration::deleteByName('SPRYPAY_SCRIPT_STATUS');
 
 		return parent::uninstall();
 	}
 
     public function getContent()
     {
-        if (isset($_REQUEST['shopId']) && $_REQUEST['shopSecret']) {
+        if (isset($_REQUEST['shopId']) && $_REQUEST['shopSecret'] && $_REQUEST['script_status']) {
             Configuration::updateValue('SPRYPAY_SHOP_ID', (int) $_REQUEST['shopId']);
             Configuration::updateValue('SPRYPAY_SHOP_SECRET', $_REQUEST['shopSecret']);
+            Configuration::updateValue('SPRYPAY_SCRIPT_STATUS', $_REQUEST['script_status']);
+
         }
         return $this->getModuleSettingsForm();
     }
@@ -61,17 +65,30 @@ class Sprypay extends PaymentModule
 	{
 		$shopId     = Configuration::get('SPRYPAY_SHOP_ID');
 		$shopSecret = Configuration::get('SPRYPAY_SHOP_SECRET');
+        $script_status = Configuration::get('SPRYPAY_SCRIPT_STATUS');
 
-        return '<form method="post" style="clear: both;">
+
+        $html='<form method="post" style="clear: both;">
             <fieldset>
             <legend><img src="../img/admin/contact.gif" />'.$this->l('Settings').'</legend>
             <label>'.$this->l('Shop Id').'</label>
             <div class="margin-form"><input type="text" size="32" name="shopId" value="'.htmlentities($shopId, ENT_COMPAT, 'UTF-8').'" /></div>
             <label>'.$this->l('Secret').'</label>
             <div class="margin-form"><input type="text" size="32" name="shopSecret" value="'.htmlentities($shopSecret, ENT_COMPAT, 'UTF-8').'" /></div>
+            <label>'.$this->l('Script of payment').'</label>
+            <div class="margin-form">
+                <input type="radio" size="32" name="script_status" value="before" ';
+        if($script_status=='before') $html.=" checked ";
+        $html.=' /> <b>'.$this->l('Before (Order will be in the system BEFORE payment) default').' </b><br>
+            <input type="radio" size="32" name="script_status" value="after"';
+        if($script_status=='after') $html.=" checked ";
+        $html.=' /> <b>'.$this->l('After (Order will be in the system AFTER payment)').'</b>
+            </div>
             <br /><center><input type="submit" name="submitSprypay" value="'.$this->l('Update settings').'" class="button" /></center>
             </fieldset>
             </form>';
+
+        return $html;
 	}
 
 	public function hookPayment($params)
