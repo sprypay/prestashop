@@ -79,10 +79,10 @@ class Sprypay extends PaymentModule
             <div class="margin-form">
                 <input type="radio" size="32" name="script_status" value="before" ';
         if($script_status=='before') $html.=" checked ";
-        $html.=' /> <b>'.$this->l('Before (Order will be in the system BEFORE payment) default').' </b><br>
+        $html.=' /> <b>'.$this->l('Before - Order will be in the system BEFORE payment -  default').' </b><br>
             <input type="radio" size="32" name="script_status" value="after"';
         if($script_status=='after') $html.=" checked ";
-        $html.=' /> <b>'.$this->l('After (Order will be in the system AFTER payment)').'</b>
+        $html.=' /> <b>'.$this->l('After - Order will be in the system AFTER payment').'</b>
             </div>
             <br /><center><input type="submit" name="submitSprypay" value="'.$this->l('Update settings').'" class="button" /></center>
             </fieldset>
