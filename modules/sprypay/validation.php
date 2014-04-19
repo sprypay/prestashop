@@ -18,23 +18,14 @@ try {
 $notificationData = $validator->getNotificationData();
 
 $cartId = (int) $notificationData['spShopPaymentId'];
-$id_order=Db::getInstance()->getValue('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
-$id_currency = Db::getInstance()->getValue('SELECT `id_currency` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
-$total_paid = Db::getInstance()->getValue('SELECT `total_paid` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
-$secure_key= Db::getInstance()->getValue('SELECT `secure_key` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
+//$id_order=Db::getInstance()->getValue('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
+//$id_currency = Db::getInstance()->getValue('SELECT `id_currency` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
+//$total_paid = Db::getInstance()->getValue('SELECT `total_paid` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
+//$secure_key= Db::getInstance()->getValue('SELECT `secure_key` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
 
 $shopId     = Configuration::get('SPRYPAY_SHOP_ID');
 $shopSecret = Configuration::get('SPRYPAY_SHOP_SECRET');
-
-if (!$validator->validateShopId($shopId))
-    die('error Invalid shop id: '.$notificationData['spShopId']);
-
-if (!$validator->validateAmount($total_paid))
-    die('error Invalid amount: '.$notificationData['spAmount']);
-
-$currency = new Currency(intval($id_currency));
-if (!$validator->validateCurrency(strtolower($currency->iso_code)))
-    die('error Invalid currency: '.$notificationData['spCurrency']);
+$script_status = Configuration::get('SPRYPAY_SCRIPT_STATUS');
 
 if (!$validator->validateControlSum($shopSecret))
     die('error Invalid control sum: '.$notificationData['spHashString']);
@@ -43,12 +34,18 @@ $orderState = Configuration::get('PS_OS_PAYMENT');
 $amountPaid = $notificationData['spAmount'];
 $message = 'Sprypay payment '.$notificationData['spPaymentId'].' ('.$notificationData['spBalanceAmount'].' '.$notificationData['spBalanceCurrency'].') was enrolled to sprypay balance in '.$notificationData['spEnrollDateTime'];
 
-//$sprypay->validateOrder(intval($id_order), $orderState, $amountPaid, $sprypay->displayName, $message,NULL, NULL, false, $secure_key);
-
-$history = new OrderHistory();// ������ ������� �������
-$history->id_order = (int)$id_order;//��������� ������ � ������ ����� id ������
-$history->changeIdOrderState((int)$orderState, (int)$history->id_order);
-$history->addWithemail(true);
+if($script_status == 'before')
+{
+    $id_order=Db::getInstance()->getValue('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
+    $history = new OrderHistory();
+    $history->id_order = (int)$id_order;
+    $history->changeIdOrderState((int)$orderState, (int)$history->id_order);
+    $history->addWithemail(true);
+}
+elseif($script_status == 'after')
+{
+    $sprypay->validateOrder(intval($cartId), _PS_OS_PAYMENT_, $amountPaid, $sprypay->displayName, $message,NULL, NULL, false, $cart->secure_key);
+}
 die($validator->confirmNotification());
 
 ?>
