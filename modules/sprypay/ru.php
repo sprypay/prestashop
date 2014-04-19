@@ -2,6 +2,8 @@
 
 global $_MODULE;
 $_MODULE = array();
+$_MODULE['<{sprypay}prestashop>payment_5fb5debc8c4f2a56c4d369214adbef6b'] = 'В ожидании платежа SpryPay';
+$_MODULE['<{sprypay}prestashop>payment_3aa83774362d325fe7d2b3e736833127'] = 'Заказ №';
 $_MODULE['<{sprypay}prestashop>payment_5b91e2131c8fb7260a5da59b4bf0aff0'] = 'Перейти на страницу оплаты SpryPay';
 $_MODULE['<{sprypay}prestashop>payment_98906c1f39e832b718be584ec5abb79a'] = 'Подождите пожалуйста, сейчас вас перенаправит на страницу оплаты SpryPay... Спасибо.';
 $_MODULE['<{sprypay}prestashop>sprypay_f70418ef8cf3be1e639f500a4ae644f6'] = 'Платёжная система SpryPay';

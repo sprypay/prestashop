@@ -13,7 +13,7 @@ class Sprypay extends PaymentModule
     {
         $this->name    = 'sprypay';
         $this->tab     = 'payments_gateways';
-        $this->version = '1.3';
+        $this->version = '1.4';
         $this->author = 'sprypay.ru';
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';

@@ -34,7 +34,7 @@ if($script_status == 'before')
 		INSERT INTO `'._DB_PREFIX_.'order_state` (`send_email`, `module_name`, `unremovable`, `color`) VALUES(1,\'sprypay\',1, \'RoyalBlue\')');
             $stateid = Db::getInstance()->Insert_ID();
             Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'order_state_lang` (`id_order_state`, `id_lang`, `name`, `template`)
-		VALUES(' . intval($stateid) . ', 1, '.$sprypay->l('Pending payment SpryPay').',\'sprypay\')');
+		VALUES(' . intval($stateid) . ', 1, \''.$sprypay->l('Pending payment SpryPay').'\',\'sprypay\')');
             define('_PS_OS_SPRYPAY_', $stateid);
         }
     }

@@ -18,6 +18,7 @@ try {
 $notificationData = $validator->getNotificationData();
 
 $cartId = (int) $notificationData['spShopPaymentId'];
+$cart =new Cart($cartId);
 //$id_order=Db::getInstance()->getValue('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
 //$id_currency = Db::getInstance()->getValue('SELECT `id_currency` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
 //$total_paid = Db::getInstance()->getValue('SELECT `total_paid` FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = \''.pSQL($cartId).'\'');
@@ -32,7 +33,7 @@ if (!$validator->validateControlSum($shopSecret))
 
 $orderState = Configuration::get('PS_OS_PAYMENT');
 $amountPaid = $notificationData['spAmount'];
-$message = 'Sprypay payment '.$notificationData['spPaymentId'].' ('.$notificationData['spBalanceAmount'].' '.$notificationData['spBalanceCurrency'].') was enrolled to sprypay balance in '.$notificationData['spEnrollDateTime'];
+$message = 'SpryPay №'.$notificationData['spPaymentId'].' ('.$notificationData['spBalanceAmount'].' '.$notificationData['spBalanceCurrency'].')'.$sprypay->l(' was enrolled to sprypay balance in ').$notificationData['spEnrollDateTime'];
 
 if($script_status == 'before')
 {
@@ -44,7 +45,7 @@ if($script_status == 'before')
 }
 elseif($script_status == 'after')
 {
-    $sprypay->validateOrder(intval($cartId), _PS_OS_PAYMENT_, $amountPaid, $sprypay->displayName, $message,NULL, NULL, false, $cart->secure_key);
+    $sprypay->validateOrder($cartId, _PS_OS_PAYMENT_, $amountPaid, $sprypay->displayName, $message,NULL, NULL, false, $cart->secure_key);
 }
 die($validator->confirmNotification());
 
